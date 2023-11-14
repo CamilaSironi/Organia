@@ -1,0 +1,23 @@
+<?php require 'templates/header.phtml'; ?>
+  
+    <h1>Lista de productos:</h1>
+    <div>
+        <ul>
+            <?php session_start(); ?>
+            <?php foreach($products as $product): ?>
+            <li> 
+                 <div>
+                     <h3><?= $product->product_name?></h3>
+                     <p>Categoría: <?=$product->category_name?> </p>
+                     <div class="btns"><button><a href="<?=BASE_URL?>product-details/<?= $product->product_id ?>">Ver detalles</a></button><button class="<?php if(!isset($_SESSION['USER_ID'])): ?>off <?php endif ?>"><a href="edit-product/<?= $product->product_id ?>">Editar</a></button><button class="<?php if(!isset($_SESSION['USER_ID'])): ?>off <?php endif ?>"><a href="removeProduct/<?=$product->product_id?>">Eliminar</a></button></div>
+                </div>
+            </li>
+            <?php endforeach ?>
+        </ul>
+    </div>
+
+    <div class='btns'>
+        <button><a href='enterProduct'>Agregar nuevo producto</a></button>
+    </div>
+
+<?php require 'templates/footer.phtml'; ?>

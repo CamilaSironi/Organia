@@ -1,0 +1,13 @@
+<?php require "templates/header.phtml" ?>
+
+<div>
+<h2>Productos de la categoría <?= $products[0]->category ?>:</h2>
+    <ul>
+        <?php foreach($products as $product): ?>
+            <li><?=$product->product_name?></li>
+            <?php endforeach ?>
+    </ul>
+<a href='./categories'>Volver</a>
+</div>
+
+<?php require "templates/footer.phtml" ?>

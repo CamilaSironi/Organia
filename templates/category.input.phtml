@@ -1,0 +1,14 @@
+<?php require_once "templates/header.phtml" ?>
+
+<form action='edit-category/<?=$id?>' method='POST'>
+    <div>
+        <label>Nuevo nombre de la categoría: </label>
+        <input name='nombre' type='text' placeholder="Panificados" required>
+    </div>
+
+    <button type='submit'>Editar categoría</button>
+</form>
+
+<a href='categories'>Volver</a>
+
+<?php require_once "templates/footer.phtml" ?>
