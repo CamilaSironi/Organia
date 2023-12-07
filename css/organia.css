@@ -96,6 +96,12 @@ ul {
     list-style-type: none;
 }
 
+table {
+    height: 95%;
+    margin: 5%;
+    border-collapse: collapse;
+}
+
 footer {
     grid-area: footer;
     display: flex;

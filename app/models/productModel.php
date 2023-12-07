@@ -4,10 +4,16 @@ require_once './app/models/model.php';
 
 class productModel extends Model{
 
-    public function getProducts(){
-
-        $query = $this->db->prepare('SELECT products.*, categories.category_name as category_name FROM products JOIN categories ON categories.category_id = products.category_id');
+    public function getProducts($page, $filter, $order){
+        $query = $this->db->prepare('SELECT products.*, categories.category_name as category_name FROM products JOIN categories ON categories.category_id = products.category_id ' . $filter . $order . $page);
         $query->execute();
+        $products = $query->fetchAll(PDO::FETCH_OBJ);
+        return $products;
+    }
+
+    public function getProductsFromCat($id){
+        $query = $this->db->prepare('SELECT * FROM products WHERE products.category_id = ?');
+        $query->execute([$id]);
         $products = $query->fetchAll(PDO::FETCH_OBJ);
         return $products;
     }
@@ -16,8 +22,8 @@ class productModel extends Model{
 
         $query = $this->db->prepare('SELECT products.*, categories.category_name as category_name FROM products JOIN categories ON categories.category_id = products.category_id  WHERE product_id = ?');
         $query->execute([$id]);
-        $products = $query->fetchAll(PDO::FETCH_OBJ);
-        return $products;
+        $product = $query->fetch(PDO::FETCH_OBJ);
+        return $product;
     }
 
     public function addProduct($name, $category, $price, $quantity){

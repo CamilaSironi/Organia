@@ -21,6 +21,9 @@ SET time_zone = "+00:00";
 -- Base de datos: `organiadb`
 --
 
+CREATE DATABASE IF NOT EXISTS `organiadb`;
+USE `organiadb`;
+
 -- --------------------------------------------------------
 
 --
