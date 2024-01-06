@@ -1,3 +1,5 @@
+### El Frontend aun no esta terminado mientras que el Backend si, se pueden probar los endpoints con Postman o similar
+
 # ENDPOINTS:
 
 ### Ejemplos de JSON para POST y PUT:
