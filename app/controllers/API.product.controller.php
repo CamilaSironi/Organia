@@ -24,7 +24,7 @@ class APIProductController extends APIController {
                     $pageQuery = "LIMIT $inicio,$limit ";
                 }
             } else{
-                $this->view->response("Por favor seleccione un valor de página numérico" , 400);
+                $this->view->response("Please select a numeric page number" , 400);
                 return;
             }
 
@@ -35,7 +35,7 @@ class APIProductController extends APIController {
                     $filterQuery = ' WHERE categories.category_id = ' . $categoryId;
                 }
             } else{
-                $this->view->response("Por favor seleccione un valor de categoria numerico" , 400);
+                $this->view->response("Please select a numeric category number" , 400);
                 return;
             }
             
@@ -56,27 +56,29 @@ class APIProductController extends APIController {
             }
             else {
                 $this->view->response(
-                    ['El producto con el id = ' . $params[':ID'] . ' no existe.']
+                    ['The product with id = ' . $params[':ID'] . ' does not exist.']
                     , 404);
             }
         }
     }
 
     function delete($params = []) {
+        AuthHelper::verify();
         $product = $this->model->getProduct($params[':ID']);
         if($product) {
             $this->model->deleteProduct($params[':ID']);
-            $this->view->response(['El producto con el id = ' . $params[':ID'] . ' se eliminó correctamente.']
+            $this->view->response(['The product with id = ' . $params[':ID'] . ' was eliminated correctly.']
             , 200);
         }
         else {
             $this->view->response(
-                ['El producto con el id = ' . $params[':ID'] . ' no existe.']
+                ['The product with id = ' . $params[':ID'] . ' does not exist.']
                 , 404);
         }
     }
 
     function create($params = []) {
+        AuthHelper::verify();
         if(isset($_POST)){
             $body = $this-> getData();
         }
@@ -86,7 +88,7 @@ class APIProductController extends APIController {
            empty($body->product_price) ||
            empty($body->category_id))
         {
-           $this->view->response(['Faltan completar campos'], 400);
+           $this->view->response(['Fields missing'], 400);
            return;
         }
 
@@ -98,12 +100,13 @@ class APIProductController extends APIController {
         $id = $this->model->addProduct($product_name, $category_id, $product_price, $product_stock);
        
         if($id){
-            $this->view->response(['El producto con el id = ' . $id . ' se agregó correctamente.']
+            $this->view->response(['The product with id = ' . $id . ' was added successfully.']
             , 201);
         }
     }
 
     function update($params = []) {
+        AuthHelper::verify();
         $id = $params[':ID'];
         if(!empty($id)){
             $product = $this->model->getProduct($id);
@@ -116,12 +119,12 @@ class APIProductController extends APIController {
             $category_id = $body->category_id;
             
             $this->model->updateProduct($product_name, $product_stock, $product_price, $category_id, $id);
-            $this->view->response(['El producto con el id = ' . $id . ' se actualizó correctamente.']
+            $this->view->response(['The product with id = ' . $id . ' was updated successfully.']
             , 200);
         }
         else {
             $this->view->response(
-                ['El producto con el id = ' . $id . ' no existe.']
+                ['The product with id = ' . $id . ' does not exist.']
                 , 404);
         }
     }

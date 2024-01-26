@@ -5,7 +5,7 @@ require_once './app/models/model.php';
 class productModel extends Model{
 
     public function getProducts($page, $filter, $order){
-        $query = $this->db->prepare('SELECT products.*, categories.category_name as category_name FROM products JOIN categories ON categories.category_id = products.category_id ' . $filter . $order . $page);
+        $query = $this->db->prepare('SELECT products.*, categories.category_name as category FROM products JOIN categories ON categories.category_id = products.category_id ' . $filter . $order . $page);
         $query->execute();
         $products = $query->fetchAll(PDO::FETCH_OBJ);
         return $products;

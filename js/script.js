@@ -24,17 +24,17 @@ async function listProducts(){
                 html += `
                 <tr id="${prod.product_id}">
                     <td>${prod.product_name}</td>
-                    <td>${prod.product_stock}</td>
+                    <td>${prod.product_quantity}</td>
                     <td>${prod.product_price}</td>
-                    <td>${prod.category_id}</td>
-                    <td><button class='btn' type='button' onClick={edit(${prod.product_id})}>Editar</button></td>
-                    <td><button class='btn' type='button' onClick={deleteProd(${prod.product_id})}>Borrar</button></td>
+                    <td>${prod.category}</td>
+                    <td><button class='btn' type='button' onClick={edit(${prod.product_id})}>Edit</button></td>
+                    <td><button class='btn-deleteProd' type='button' onClick={deleteProd(${prod.product_id})}>Delete</button></td>
                 </tr>`  
             }
            html += `
         </tbody>
     </table>
-    <button class='btn' type='button' onClick={addProductForm()}>Agregar nuevo producto</button>
+    <button class='btn' type='button' onClick={addProductForm()}>Add new product</button>
     <a href="./index.html">Home</a>`;
     body.innerHTML = html;
 }
@@ -51,7 +51,7 @@ async function addProductForm(){
             </div>
             <div class="">  
                     <label>Stock disponible: </label>
-                    <input required type="number" name="product_stock" placeholder="50">
+                    <input required type="number" name="product_quantity" placeholder="50">
             </div>
             <div class="">  
                 <label>Precio: </label>
@@ -67,16 +67,16 @@ async function addProductForm(){
                         html +=`
                     </select>
             </div>
-            <button class='btn' type="submit" onClick={createProd()}> Añadir producto </button>
+            <button class='btn' type="button" onClick={createProd()}> Añadir producto </button>
         </form>`
     body.innerHTML = html;
 }
 
 async function createProd(){
-    let form = document.getElementById("prodForm");
-    let formData = new FormData(form); 
-    let toSend = Object.fromEntries(formData); 
     try {
+        let form = document.getElementById("prodForm");
+        let formData = new FormData(form); 
+        let toSend = Object.fromEntries(formData); 
         let res = await fetch(URL, { 
             method: 'POST',
             body: JSON.stringify(toSend), 
