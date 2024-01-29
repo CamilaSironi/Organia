@@ -27,7 +27,7 @@ class productModel extends Model{
     }
 
     public function addProduct($name, $category, $price, $quantity){
-        $query = $this->db->prepare('INSERT INTO products (product_name, category_id, product_price, product_stock) VALUES (?,?,?,?)');
+        $query = $this->db->prepare('INSERT INTO products (product_name, category_id, product_price, product_quantity) VALUES (?,?,?,?)');
         $query->execute([$name, $category, $price, $quantity]);
         return $this->db->lastInsertId();
     }
@@ -43,7 +43,7 @@ class productModel extends Model{
     } 
 
     public function updateProduct($name, $quantity, $price, $category, $id){
-        $query = $this->db->prepare('UPDATE products SET product_name = ? , product_stock = ? , product_price = ? , category_id = ? WHERE product_id = ?');
+        $query = $this->db->prepare('UPDATE products SET product_name = ? , product_quantity = ? , product_price = ? , category_id = ? WHERE product_id = ?');
         $query->execute([$name, $quantity, $price, $category, $id]);
         
     }

@@ -63,7 +63,6 @@ class APIProductController extends APIController {
     }
 
     function delete($params = []) {
-        AuthHelper::verify();
         $product = $this->model->getProduct($params[':ID']);
         if($product) {
             $this->model->deleteProduct($params[':ID']);
@@ -78,13 +77,12 @@ class APIProductController extends APIController {
     }
 
     function create($params = []) {
-        AuthHelper::verify();
         if(isset($_POST)){
             $body = $this-> getData();
         }
 
         if(empty($body->product_name) || 
-           empty($body->product_stock) || 
+           empty($body->product_quantity) || 
            empty($body->product_price) ||
            empty($body->category_id))
         {
@@ -93,11 +91,11 @@ class APIProductController extends APIController {
         }
 
         $product_name = $body->product_name;
-        $product_stock = $body->product_stock;
+        $product_quantity = $body->product_quantity;
         $product_price= $body->product_price;
         $category_id = $body->category_id;
         
-        $id = $this->model->addProduct($product_name, $category_id, $product_price, $product_stock);
+        $id = $this->model->addProduct($product_name, $category_id, $product_price, $product_quantity);
        
         if($id){
             $this->view->response(['The product with id = ' . $id . ' was added successfully.']
@@ -106,7 +104,6 @@ class APIProductController extends APIController {
     }
 
     function update($params = []) {
-        AuthHelper::verify();
         $id = $params[':ID'];
         if(!empty($id)){
             $product = $this->model->getProduct($id);
@@ -114,11 +111,11 @@ class APIProductController extends APIController {
         if($product) {
             $body = $this-> getData();
             $product_name = $body->product_name;
-            $product_stock = $body->product_stock;
+            $product_quantity = $body->product_quantity;
             $product_price= $body->product_price;
             $category_id = $body->category_id;
             
-            $this->model->updateProduct($product_name, $product_stock, $product_price, $category_id, $id);
+            $this->model->updateProduct($product_name, $product_quantity, $product_price, $category_id, $id);
             $this->view->response(['The product with id = ' . $id . ' was updated successfully.']
             , 200);
         }

@@ -27,15 +27,15 @@ async function listProducts(){
                     <td>${prod.product_quantity}</td>
                     <td>${prod.product_price}</td>
                     <td>${prod.category}</td>
-                    <td><button class='btn' type='button' onClick={edit(${prod.product_id})}>Edit</button></td>
-                    <td><button class='btn-deleteProd' type='button' onClick={deleteProd(${prod.product_id})}>Delete</button></td>
+                    <td><button class='btn' type='button' onClick={editProductForm(${prod.product_id})}>Edit</button></td>
+                    <td><button class='btn' type='button' onClick={deleteProd(${prod.product_id})}>Delete</button></td>
                 </tr>`  
             }
            html += `
         </tbody>
     </table>
     <button class='btn' type='button' onClick={addProductForm()}>Add new product</button>
-    <a href="./index.html">Home</a>`;
+    <button class='btn' type='button'><a class='btn'  href="./index.html">Home</a></button>`;
     body.innerHTML = html;
 }
 
@@ -46,19 +46,19 @@ async function addProductForm(){
     let html = `
         <form id="prodForm" method="POST">
             <div class="">  
-                    <label>Nombre del producto: </label>
-                    <input required type="text" name="product_name" placeholder="Por ej.: Medallones de calabaza">
+                    <label>Name of the product: </label>
+                    <input required type="text" name="product_name" placeholder="For example: Frozen brocoli">
             </div>
             <div class="">  
-                    <label>Stock disponible: </label>
+                    <label>Stock: </label>
                     <input required type="number" name="product_quantity" placeholder="50">
             </div>
             <div class="">  
-                <label>Precio: </label>
+                <label>Price: </label>
                 <input required type="double" name="product_price" placeholder="1000">
             </div>
             <div class="">  
-                    <label>Categoría: </label>
+                    <label>Category: </label>
                     <select name="category_id" required>`
                         for(const c of categories){
                             html +=
@@ -67,7 +67,7 @@ async function addProductForm(){
                         html +=`
                     </select>
             </div>
-            <button class='btn' type="button" onClick={createProd()}> Añadir producto </button>
+            <button class='btn' type="button" onClick={createProd()}> Add product </button>
         </form>`
     body.innerHTML = html;
 }
@@ -79,6 +79,59 @@ async function createProd(){
         let toSend = Object.fromEntries(formData); 
         let res = await fetch(URL, { 
             method: 'POST',
+            body: JSON.stringify(toSend), 
+            headers: {'Content-Type': 'application/json'}
+        })
+        console.log(res.status);
+        listProducts();
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+async function editProductForm(id){
+    let res = await fetch(URLC);
+    let categories = await res.json();
+    let res1 = await fetch(URL+id);
+    let prod = await res1.json();
+    body.innerHTML = "";
+    let html = `
+        <form id="editProdForm" method="PUT">
+            <div class="">  
+                    <label>Name of the product: </label>
+                    <input required type="text" name="product_name" value="${prod.product_name}">
+            </div>
+            <div class="">  
+                    <label>Stock: </label>
+                    <input required type="number" name="product_quantity" value="${prod.product_quantity}">
+            </div>
+            <div class="">  
+                <label>Price: </label>
+                <input required type="double" name="product_price" value="${prod.product_price}">
+            </div>
+            <div class="">  
+                    <label>Category: </label>
+                    <select name="category_id" value="${prod.category_name}" required>`
+                        for(const c of categories){
+                            html +=
+                            `<option value="${c.category_id}">${c.category_name}</option>`
+                        }
+                        html +=`
+                    </select>
+            </div>
+            <button class='btn' type="button" onClick={editProd(${id})}> Edit product </button>
+        </form>`
+    body.innerHTML = html;
+}
+
+async function editProd(id){
+    try {
+        let form = document.getElementById("editProdForm");
+        let formData = new FormData(form); 
+        let toSend = Object.fromEntries(formData); 
+        let res = await fetch(URL+id, { 
+            method: 'PUT',
             body: JSON.stringify(toSend), 
             headers: {'Content-Type': 'application/json'}
         })
@@ -116,12 +169,12 @@ async function listCategories(){
     <ul>`;
         for(const c of categories){
             html += `
-            <li id="${c.category_id}"><label>${c.category_name}</label><button class='btn' type='button' onClick={edit(${c.category_id})}>Editar</button><button class='btn' type='button' onClick={deleteCat(${c.category_id})}>Borrar</button></li>`;
+            <li id="${c.category_id}"><label>${c.category_name}</label><button class='btn' type='button' onClick={editCatForm(${c.category_id})}>Edit</button><button class='btn' type='button' onClick={deleteCat(${c.category_id})}>Delete</button></li>`;
         }
         html += `
     </ul>
-    <button class='btn' type='button' onClick={addCategoryForm()}>Agregar nueva categoria</button>
-    <a href="./index.html">Home</a>`;
+    <button class='btn' type='button' onClick={addCategoryForm()}>Add new category</button>
+    <button class='btn' type='button'><a class='btn' href="./index.html">Home</a></button>`;
     body.innerHTML = html;
 }
 
@@ -130,10 +183,10 @@ function addCategoryForm(){
     let html = `
         <form id="catForm" method="POST">
             <div class="">  
-                    <label>Nombre de la categoria: </label>
-                    <input required type="text" name="category_name" placeholder="Por ej.: Congelados">
+                    <label>Name of the category: </label>
+                    <input required type="text" name="category_name" placeholder="For example: Frozen">
             </div>
-            <button class='btn' type="submit" onClick={createCat()}> Añadir categoria </button>
+            <button class='btn' type="submit" onClick={createCat()}> Add category </button>
         </form>`
     body.innerHTML = html;
 }
@@ -156,6 +209,39 @@ async function createCat(){
     }
 }
 
+async function editCatForm(id){
+    let res = await fetch(URLC+id);
+    let cat = await res.json();
+    body.innerHTML = "";
+    let html = `
+        <form id="editCatForm" method="PUT">
+            <div class="">  
+                    <label>Name of the category: </label>
+                    <input required type="text" name="category_name" value="${cat.category_name}">
+            </div>
+            <button class='btn' type="button" onClick={editCat(${id})}> Edit category </button>
+        </form>`
+    body.innerHTML = html;
+}
+
+async function editCat(id){
+    try {
+        let form = document.getElementById("editCatForm");
+        let formData = new FormData(form); 
+        let toSend = Object.fromEntries(formData); 
+        let res = await fetch(URLC+id, { 
+            method: 'PUT',
+            body: JSON.stringify(toSend), 
+            headers: {'Content-Type': 'application/json'}
+        })
+        console.log(res.status);
+        listCategories();
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
 async function deleteCat(id){
     try{
         let res = await fetch(URLC+id,{
@@ -167,22 +253,4 @@ async function deleteCat(id){
     catch (error) {
         console.log(error);
     }
-}
-
-let btnPanel = document.getElementById("btn-panel");
-btnPanel.addEventListener('click', showPanel);
-
-function showPanel(){
-    body.innerHTML = "";
-    body.innerHTML = `
-    <h2>Login</h2>
-    <form id= "form" action="loginUser" method="POST">
-       <input type="text" name="user" placeholder="Usuario" required>
-       <input type="password" name="password" placeholder="Contraseña" required>
-       
-       <div class='btns'>
-          <button type="submit"> Ingresar </button>
-       </div>
-    </form>
-    <a href="./index.html">Home</a>`;
 }
